@@ -81,16 +81,12 @@ void highscoreCheck( unsigned int currentScore){
                     
                    if(temp.score == highScore[i+n].score){//changes rank of next even score
                         buffer = highScore[i+n];
-                        //SYSCFG0 &= ~DFWP;
                         highScore[i+n]=temp;
                         highScore[i+n].rank = i+1;
-                        //SYSCFG0 |= DFWP;
                     }else if(temp.score > highScore[i+n].score){//detects end of ven scores and adds new score in the end
                         buffer = highScore[i+n];
-                        //SYSCFG0 &= ~DFWP;
                         highScore[i+n]=temp;
                         highScore[i+n].rank = i+1;
-                        //SYSCFG0 |= DFWP;
                         temp = buffer;
                         i = i+n;                                // sets i to current position
                         break;
