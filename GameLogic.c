@@ -6,6 +6,7 @@
 #include "GameLogic.h"
 #include "HardwareManager.h"
 
+//Position LCD
 #define pos1 4   /* Digit A1 - L4  */
 #define pos2 6   /* Digit A2 - L6  */
 #define pos3 8   /* Digit A3 - L8  */
@@ -13,11 +14,12 @@
 #define pos5 2   /* Digit A5 - L2  */
 #define pos6 18  /* Digit A6 - L18 */
 
-
+//Define Symbols
 #define DIAMONDUP   0xA080
 #define DIAMONDDOWN 0x0A10
 #define BRICKUP     0x00C7
 #define BRICKDOWN   0x003B
+
 
 typedef enum {
     OBJ_EMPTY,
@@ -27,9 +29,7 @@ typedef enum {
     OBJ_DIAMONDDOWN
 } ObjectType;
 
-
 GameState gameState = GAMESTATE_INIT;
-
 
 // Define word access definitions to LCD memories
 #define LCDMEMW ((int*)LCDMEM)
@@ -37,21 +37,24 @@ GameState gameState = GAMESTATE_INIT;
 
 int levelSwitch         = 0;
 const unsigned int startSpeed    = 50000;
-unsigned int speed      = 50000;
-int ziffer[6]           = {0};
-int leer                = 180;
-int diamantOben         = 210;
-int diamantUnten        = 240;
-int steinOben           = 270;
-int steinUnten          = 300;
-unsigned int i         = 0;
-unsigned int currentScore = 0;
+unsigned int speed          = 50000;
+int ziffer[6]               = {0};
+int leer                    = 180;  //180
+int diamantOben             = 210;  //210;
+int diamantUnten            = 240;
+int steinOben               = 270;  //270;
+int steinUnten              = 300;  //300;
+unsigned int i              = 0;
+unsigned int currentScore   = 0;
+unsigned int currentLevel   = 0;
+int levelScore              = 10;
 
 unsigned char gateS1IsUp = 0;
 unsigned char gateS2IsUp = 0;
 
 void displayDiamondsAndBricks(int c, int position);
 void updateGatePosition( void );
+void BatLevel(int batt);
 
 void initGameLogic( void )
 {
@@ -76,16 +79,8 @@ void pushDiamondsAndBricks()
     {
         ziffer[i] = ziffer[i+1];
     }
-    if (levelSwitch <= 20)
-    {
-        // generate a random next diamond or brick
         ziffer[5] = rand() % 300;
-    }
-    else
-    {
-        ziffer[5] = 0;
-    }
-
+ 
     updateGatePosition();
 
     // Auf den Display anzeigen
@@ -97,16 +92,24 @@ void pushDiamondsAndBricks()
     displayDiamondsAndBricks(ziffer[5], pos1);
 
     // nach 20 Zeichen Spiel schwieriger machen
-    if(levelSwitch == 26 && leer > 100)
+    if(currentScore == levelScore ) //
     {
+        if(currentLevel < 20)
+        {
         leer = leer - 4;
         diamantOben = diamantOben - 3;
         diamantUnten = diamantUnten - 2;
         steinOben = steinOben -1;
         speed = speed - 2000;
-        levelSwitch = 0;
-        displayScrollText("NEXT LEVEL");
+        levelScore = levelScore+10;
+        currentLevel++;
+        }
+        else
+        {
+        levelScore = 0;
+        }
     }
+    
 
     for(i = 0; i < speed; i++)
     {
@@ -116,10 +119,8 @@ void pushDiamondsAndBricks()
         // Geschwindigkeit Zeichenwechsel
     }
 
-    // counts also empty spaces?
-    levelSwitch++;                  // Zeichenwechsel zählen
+    BatLevel(currentLevel);
 }
-
 
 void updateGatePosition( void )
 {
@@ -232,4 +233,36 @@ void displayDiamondsAndBricks(int c, int position)
     }
 }
 
+void BatLevel(int batt)
+{if(batt ==1){
+        LCDMEM[13]=0b1;
+        LCDMEM[12]=0b10000000;
+    }
+    else if(batt==2){
+        LCDMEM[13]=0b1001;
+        LCDMEM[12]=0b10000000;
+    }
+    else if(batt==3){
+        LCDMEM[13]=0b1001;
+        LCDMEM[12]=0b11000000;
+    }
+    else if(batt==4){
+        LCDMEM[13]=0b1101;
+        LCDMEM[12]=0b11000000;
+    }
+    else if(batt==5){
+        LCDMEM[13]=0b1101;
+        LCDMEM[12]=0b11100000;
+    }
+    else if(batt>=6){
+        LCDMEM[13]=0b1111;
+        LCDMEM[12]=0b11100000;
+    }
+    else{
+        LCDMEM[13]=0b1;
+        LCDMEM[12]=0b0;
+        
+    }
+    
+}
 
