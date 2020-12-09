@@ -39,15 +39,16 @@ int levelSwitch         = 0;
 const unsigned int startSpeed    = 50000;
 unsigned int speed          = 50000;
 int ziffer[6]               = {0};
-int leer                    = 180;  //180
-int diamantOben             = 210;  //210;
+int leer                    = 180;  
+int diamantOben             = 210;  
 int diamantUnten            = 240;
-int steinOben               = 270;  //270;
-int steinUnten              = 300;  //300;
+int steinOben               = 270;  
+int steinUnten              = 300;  
 unsigned int i              = 0;
 unsigned int currentScore   = 0;
 unsigned int currentLevel   = 0;
 int levelScore              = 10;
+int pauseState              = 0;
 
 unsigned char gateS1IsUp = 0;
 unsigned char gateS2IsUp = 0;
@@ -74,12 +75,26 @@ void initGameLogic( void )
 
 void pushDiamondsAndBricks()
 {
+    if (pauseState == 1){
+    
+    }
+    else {
+        
+    
     // Zeichen weitergeben und neue zufällig generieren
     for(i = 0; i<5; i++)
     {
         ziffer[i] = ziffer[i+1];
     }
-        ziffer[5] = rand() % 300;
+      if(ziffer[4]>leer){
+            
+            ziffer[5] = 0;
+    }
+    else{
+     ziffer[5] = rand() % 300;
+    }  
+    }
+        
  
     updateGatePosition();
 
@@ -130,11 +145,13 @@ void updateGatePosition( void )
         if(gateS1IsUp == 0)
         {
             gateS1IsUp = 1;
+            pauseState = 1;
 
         }
         else
         {
             gateS1IsUp = 0;
+            pauseState = 0;
 
         }
 
@@ -234,7 +251,9 @@ void displayDiamondsAndBricks(int c, int position)
 }
 
 void BatLevel(int batt)
-{if(batt ==1){
+
+{
+    if(batt ==1){
         LCDMEM[13]=0b1;
         LCDMEM[12]=0b10000000;
     }
@@ -254,9 +273,29 @@ void BatLevel(int batt)
         LCDMEM[13]=0b1101;
         LCDMEM[12]=0b11100000;
     }
-    else if(batt>=6){
+    else if(batt==6){
         LCDMEM[13]=0b1111;
         LCDMEM[12]=0b11100000;
+    }
+    else if(batt==7){
+        LCDMEM[13]=0b1111;
+        LCDMEM[12]=0b01100000;
+    }
+    else if(batt==8){
+        LCDMEM[13]=0b0111;
+        LCDMEM[12]=0b01100000;
+    }
+    else if(batt==9){
+        LCDMEM[13]=0b0111;
+        LCDMEM[12]=0b00100000;
+    }
+    else if(batt==10){
+        LCDMEM[13]=0b0011;
+        LCDMEM[12]=0b00100000;
+    }
+    else if(batt>=11){
+        LCDMEM[13]=0b0011;
+        LCDMEM[12]=0b00000000;
     }
     else{
         LCDMEM[13]=0b1;
@@ -265,4 +304,3 @@ void BatLevel(int batt)
     }
     
 }
-
