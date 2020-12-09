@@ -8,6 +8,7 @@
 #include "hal_LCD.h"
 #include "string.h"
 #include "driverlib.h"//---------------------CHANGES TO ORIGINAL------------------
+#include "HardwareManager.h"
 
 #define MAXSCROLLTEXTLENGTH 256
 char scrollTextBuffer[MAXSCROLLTEXTLENGTH];
@@ -52,6 +53,13 @@ const char alphabetBig[26][2] = { { 0xEF, 0x00 }, /* "A" LCD segments a+b+c+e+f+
                                   { 0x00, 0xAA }, /* "X" */
                                   { 0x00, 0xB0 }, /* "Y" */
                                   { 0x90, 0x28 } /* "Z" */
+
+};
+
+const char symbols[4][2] = { { 0x80, 0xA0 }, /* "*" */
+                             { 0xC7, 0x00 }, /* "+" */
+                             { 0x50, 0x3B }, /* "´" */
+                             { 0x03, 0x00 } /* "-" */
 };
 
 void Init_LCD()
@@ -80,7 +88,6 @@ void Init_LCD()
 
     // Clear LCD memory
     LCD_E_clearAllMemory(LCD_E_BASE);
-
     // Configure COMs and SEGs
     // L0 = COM0, L1 = COM1, L2 = COM2, L3 = COM3
     LCD_E_setPinAsCOM(LCD_E_BASE, LCD_E_SEGMENT_LINE_0, LCD_E_MEMORY_COM0);
@@ -122,75 +129,24 @@ char buffer[6] = "      ";
 int emptyCalls = 0;
 int callsBetweenUpdates = 250;
 
-void displayScrollTextNonBlocking()
-{
-    if (emptyCalls < callsBetweenUpdates)
-    {
-        emptyCalls++;
-    }
-    else
-    {
-        emptyCalls = 0;
-        if (newTextReceived == 1)
-        {
-            newTextReceived = 0;
-            currentScrollPosition = 0;
-            clearLCD();
-            msgLength = strlen(scrollTextBuffer);
-            emptyCalls = 0;
-        }
-
-        char buffer[6];
-        int i = 0;
-        for (i = 0; i < 6; i++)
-        {
-            if (msgLength > currentScrollPosition)
-            {
-                buffer[i] = scrollTextBuffer[currentScrollPosition+i];
-            }
-            else
-            {
-                buffer[i] = ' ';
-
-            }
-
-        }
-
-
-        showChar(buffer[0], pos1);
-        showChar(buffer[1], pos2);
-        showChar(buffer[2], pos3);
-        showChar(buffer[3], pos4);
-        showChar(buffer[4], pos5);
-        showChar(buffer[5], pos6);
-
-        currentScrollPosition++;
-        if (currentScrollPosition >= msgLength + 7)
-        {
-            currentScrollPosition = 0;
-        }
-    }
-
-}
-
 /*
  * Scrolls input string across LCD screen from left to right
  */
 void displayScrollText(char *msg)
 {
     int length = strlen(msg);
-    //int oldmode = *mode;---------------------CHANGES TO ORIGINAL------------------
     int i;
     int s = 5;
-    char buffer[6] = "      ";
-    for (i = 0; i < length + 7; i++)
+    char buffer[6] = "      "; //Leerer Buffer wird erstellt
+    for (i = 0; i < length + 7; i++) //Loopt durch alle Buchstaben + 7
     {
-        //if (*mode != oldmode)---------------------CHANGES TO ORIGINAL------------------
-        //  break;---------------------CHANGES TO ORIGINAL------------------
+        //Leert den Buffer
         int t;
         for (t = 0; t < 6; t++)
             buffer[t] = ' ';
         int j;
+        //Füllt den Buffer
+        //Wird pro Zyklus um eins verschoben
         for (j = 0; j < length; j++)
         {
             if (((s + j) >= 0) && ((s + j) < 6))
@@ -198,6 +154,8 @@ void displayScrollText(char *msg)
         }
         s--;
 
+        //Buffer wird auf die "pos_" abgebildet
+        //die Positionen wurden vorgänglich definiert
         showChar(buffer[0], pos1);
         showChar(buffer[1], pos2);
         showChar(buffer[2], pos3);
@@ -205,7 +163,12 @@ void displayScrollText(char *msg)
         showChar(buffer[4], pos5);
         showChar(buffer[5], pos6);
 
+        //Es wird kurz gewartet
         __delay_cycles(200000);
+        if (S1ButtonSignal || S2ButtonSignal){
+            i = length + 8;
+            clearLCD();
+        }
     }
 }
 
@@ -215,29 +178,29 @@ void displayScrollText(char *msg)
  */
 void showChar(char c, int position)
 {
-    if (c == ' ')
-    {
+    if (c == ' '){
         // Display space
         LCDMEMW[position / 2] = 0;
     }
-    else if (c >= '0' && c <= '9')
-    {
+    else if (c >= '0' && c <= '9'){
         // Display digit
         LCDMEMW[position / 2] = digit[c - 48][0] | (digit[c - 48][1] << 8);
     }
-    else if (c >= 'A' && c <= 'Z')
-    {
+    else if (c >= 'A' && c <= 'Z'){
         // Display alphabet
         LCDMEMW[position / 2] = alphabetBig[c - 65][0]
                 | (alphabetBig[c - 65][1] << 8);
     }
-    else if (c == '_')
-    {
+    else if (c >= '*' && c <= '-'){
+        // Display alphabet
+        LCDMEMW[position / 2] = symbols[c - 42][0]
+                | (symbols[c - 42][1] << 8);
+    }
+    else if (c == '_'){
         // Display underline
         LCDMEMW[position / 2] = 0x10;
     }
-    else
-    {
+    else{
         // Turn all segments on if character is not a space, digit, or uppercase letter
         LCDMEMW[position / 2] = 0xFFFF;
     }
@@ -256,4 +219,3 @@ void clearLCD()
     LCDMEMW[pos6 / 2] = 0;
     LCDMEM[12] = LCDMEM[13] = 0;
 }
-

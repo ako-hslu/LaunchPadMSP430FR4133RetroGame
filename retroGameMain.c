@@ -49,6 +49,7 @@ void main(void) {
         switch(gameState)
         {
         case GAMESTATE_INIT:
+            displayScrollText("HELLO PRESS S1 TO TOGGLE AND S2 TO SELECT");
             gameState = GAMESTATE_MENUMODE;
             break;
 
@@ -57,7 +58,7 @@ void main(void) {
             if(menuState == MENUSTATE_STARTGAME)
             {
                 // reset the menuState
-                menuState = MENUSTATE_SHOWMENUOPERATION;
+                menuState = MENUSTATE_OPTIONSTARTGAME;
                 // switch the main state machine to Play Mode
                 gameState = GAMESTATE_GAMEINIT;
             }
@@ -75,7 +76,7 @@ void main(void) {
             clearLCD();
             sprintf(buf, "SCORE %d", currentScore);
             displayScrollText(buf);
-            gameState = GAMESTATE_INIT;
+            gameState = GAMESTATE_MENUMODE;
             break;
 
         default:
