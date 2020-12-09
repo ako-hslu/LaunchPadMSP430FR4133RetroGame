@@ -58,7 +58,7 @@ const char alphabetBig[26][2] = { { 0xEF, 0x00 }, /* "A" LCD segments a+b+c+e+f+
 
 const char symbols[4][2] = { { 0x80, 0xA0 }, /* "*" */
                              { 0xC7, 0x00 }, /* "+" */
-                             { 0x50, 0x3B }, /* "´" */
+                             { 0x3B, 0x50 }, /* "´" */
                              { 0x03, 0x00 } /* "-" */
 };
 
@@ -171,7 +171,14 @@ void displayScrollText(char *msg)
         }
     }
 }
-
+void showMenu(){
+    char buffer[4] = "MENU";
+    showChar(buffer[0], pos2);
+    showChar(buffer[1], pos3);
+    showChar(buffer[2], pos4);
+    showChar(buffer[3], pos5);
+    __delay_cycles(1000000);
+}
 /*
  * Displays input character at given LCD digit/position
  * Only spaces, numeric digits, and uppercase letters are accepted characters

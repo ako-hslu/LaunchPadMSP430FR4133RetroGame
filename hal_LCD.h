@@ -34,6 +34,7 @@ void Init_LCD(void);
 void displayScrollText(char*);
 void SetScrollText(char* msg);
 void displayScrollTextNonBlocking(void);
+void showMenu();
 void showChar(char, int);
 void clearLCD(void);
 

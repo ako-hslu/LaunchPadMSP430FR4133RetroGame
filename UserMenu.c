@@ -47,7 +47,6 @@ void UpdateMenu()
         }
         break;
 
-
     case MENUSTATE_HIGHSCORE:
         displayScrollText("3-HIGHSCORES");
         if(S1ButtonSignal == 1)
@@ -58,13 +57,13 @@ void UpdateMenu()
         else if (S2ButtonSignal == 1)
         {
             S2ButtonSignal = 0;
+            currentHighScoreRank = 1;
             menuState = MENUSTATE_SHOWHIGHSCORES;
         }
         break;
 
-
     case MENUSTATE_SHOWINSTRUCTIONS:
-        displayScrollText("INSTRUCTIONS BLA BLA");
+        displayScrollText("COLLECT THE * AND AVOID THE + - DO THIS BY PRESSING S2");
         if(S1ButtonSignal == 1)
         {
             S1ButtonSignal = 0;
@@ -91,6 +90,7 @@ void UpdateMenu()
         else if (S2ButtonSignal == 1)
         {
             S2ButtonSignal = 0;
+            currentHighScoreRank = 1;
             menuState = MENUSTATE_HIGHSCORE;
         }
         break;

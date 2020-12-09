@@ -49,9 +49,12 @@ void main(void) {
         switch(gameState)
         {
         case GAMESTATE_INIT:
-            displayScrollText("HELLO PRESS S1 TO TOGGLE AND S2 TO SELECT");
-            gameState = GAMESTATE_MENUMODE;
-            break;
+          displayScrollText("HELLO PRESS S1 TO TOGGLE AND S2 TO SELECT");
+          S1ButtonSignal = 0;
+          S2ButtonSignal = 0;
+          showMenu();
+          gameState = GAMESTATE_MENUMODE;
+          break;
 
         case GAMESTATE_MENUMODE:
             UpdateMenu();
