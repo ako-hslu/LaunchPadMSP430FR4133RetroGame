@@ -49,22 +49,21 @@ void main(void) {
         switch(gameState)
         {
         case GAMESTATE_INIT:
-            gameState = GAMESTATE_MENUMODE;
-            break;
+          displayScrollText("HELLO PRESS S1 TO TOGGLE AND S2 TO SELECT");
+          S1ButtonSignal = 0;
+          S2ButtonSignal = 0;
+          showMenu();
+          gameState = GAMESTATE_MENUMODE;
+          break;
 
         case GAMESTATE_MENUMODE:
             UpdateMenu();
             if(menuState == MENUSTATE_STARTGAME)
             {
                 // reset the menuState
-                menuState = MENUSTATE_SHOWMENUOPERATION;
+                menuState = MENUSTATE_OPTIONSTARTGAME;
                 // switch the main state machine to Play Mode
                 gameState = GAMESTATE_GAMEINIT;
-            }if(menuState == MENUSTATE_RESETHIGHSCORE){
-                // reset the menuState
-                menuState = MENUSTATE_SHOWMENUOPERATION;
-                // switch the main state machine to reset Mode
-                gameState = GAMESTATE_RESETHIGHSCORES;
             }
             break;
         case GAMESTATE_GAMEINIT:
@@ -80,13 +79,7 @@ void main(void) {
             clearLCD();
             sprintf(buf, "SCORE %d", currentScore);
             displayScrollText(buf);
-            highscoreCheck(currentScore);
-            gameState = GAMESTATE_INIT;
-            break;
-            
-        case GAMESTATE_RESETHIGHSCORES: //neuer Gamestate, der den Highscore resetet
-            resetHighscore();
-            gameState = GAMESTATE_INIT;
+            gameState = GAMESTATE_MENUMODE;
             break;
 
         default:

@@ -4,13 +4,14 @@
  *  Created on: May 27, 2020
  *      Author: PRG_C FS20
  */
+
 #include "UserMenu.h"
 #include "hal_LCD.h"
 #include <stdio.h>
 #include "HighScore.h"
 #include "HardwareManager.h"
 
-MenuState menuState = MENUSTATE_SHOWMENUOPERATION;
+MenuState menuState = MENUSTATE_OPTIONSTARTGAME;
 
 char scrollText[256];
 
@@ -18,39 +19,64 @@ void UpdateMenu()
 {
     switch (menuState)
     {
-
-    case MENUSTATE_SHOWMENUOPERATION:
-        displayScrollText("S1 TO TOGGLE MENU S2 TO START GAME");
+    case MENUSTATE_OPTIONSTARTGAME:
+        displayScrollText("1-START GAME");
         if(S1ButtonSignal == 1)
         {
             S1ButtonSignal = 0;
-            menuState = MENUSTATE_OPTIONHIGHSCORES;
+            menuState = MENUSTATE_INSTRUCTION;
         }
         else if (S2ButtonSignal == 1)
         {
             S2ButtonSignal = 0;
             menuState = MENUSTATE_STARTGAME;
         }
-
         break;
 
-    case MENUSTATE_OPTIONHIGHSCORES:
-        displayScrollText("HIGHSCORES");
+    case MENUSTATE_INSTRUCTION:
+        displayScrollText("2-INSTRUCTIONS");
         if(S1ButtonSignal == 1)
         {
             S1ButtonSignal = 0;
-            menuState = MENUSTATE_OPTIONCONTROLS;
+            menuState = MENUSTATE_HIGHSCORE;
         }
         else if (S2ButtonSignal == 1)
         {
             S2ButtonSignal = 0;
-            displayScrollText("S1 NEXT S2 EXIT");
-            currentHighScoreRank = 1;
-            menuState = MENUSTATE_SHOWHIGHSCORE;
+            menuState = MENUSTATE_SHOWINSTRUCTIONS;
         }
         break;
 
-    case MENUSTATE_SHOWHIGHSCORE:
+    case MENUSTATE_HIGHSCORE:
+        displayScrollText("3-HIGHSCORES");
+        if(S1ButtonSignal == 1)
+        {
+            S1ButtonSignal = 0;
+            menuState = MENUSTATE_OPTIONSTARTGAME;
+        }
+        else if (S2ButtonSignal == 1)
+        {
+            S2ButtonSignal = 0;
+            currentHighScoreRank = 1;
+            menuState = MENUSTATE_SHOWHIGHSCORES;
+        }
+        break;
+
+    case MENUSTATE_SHOWINSTRUCTIONS:
+        displayScrollText("COLLECT THE * AND AVOID THE + - DO THIS BY PRESSING S2");
+        if(S1ButtonSignal == 1)
+        {
+            S1ButtonSignal = 0;
+            menuState = MENUSTATE_INSTRUCTION;
+        }
+        else if (S2ButtonSignal == 1)
+        {
+            S2ButtonSignal = 0;
+            menuState = MENUSTATE_INSTRUCTION;
+        }
+        break;
+
+    case MENUSTATE_SHOWHIGHSCORES:
         displayHighScoreRank( currentHighScoreRank );
         if(S1ButtonSignal == 1)
         {
@@ -64,71 +90,13 @@ void UpdateMenu()
         else if (S2ButtonSignal == 1)
         {
             S2ButtonSignal = 0;
-            menuState = MENUSTATE_OPTIONHIGHSCORES;
+            currentHighScoreRank = 1;
+            menuState = MENUSTATE_HIGHSCORE;
         }
         break;
-
-    case MENUSTATE_OPTIONCONTROLS:
-        displayScrollText("CONTROLS");
-        if(S1ButtonSignal == 1)
-        {
-            S1ButtonSignal = 0;
-            menuState = MENUSTATE_OPTIONDEMOMODE;
-        }
-        else if (S2ButtonSignal == 1)
-        {
-            S2ButtonSignal = 0;
-            displayScrollText("NO CONTROLS YET");
-        }
-        break;
-
-    case MENUSTATE_OPTIONDEMOMODE:
-        displayScrollText("DEMO MODE");
-        if(S1ButtonSignal == 1)
-        {
-            S1ButtonSignal = 0;
-            menuState = MENUSTATE_OPTIONSTARTGAME;
-        }
-        else if (S2ButtonSignal == 1)
-        {
-            S2ButtonSignal = 0;
-            displayScrollText("NO DEMO YET");
-        }
-
-        break;
-
-    case MENUSTATE_OPTIONSTARTGAME:
-        displayScrollText("S2 TO START GAME");
-        if(S1ButtonSignal == 1)
-        {
-            S1ButtonSignal = 0;
-            menuState = MENUSTATE_OPTIONRESETSCORE;
-        }
-        else if (S2ButtonSignal == 1)
-        {
-            S2ButtonSignal = 0;
-            menuState = MENUSTATE_STARTGAME;
-       }
-        break;
-        
-    case MENUSTATE_OPTIONRESETSCORE:                    
-        displayScrollText("S2 TO RESET HIGHSCORE");
-        if(S1ButtonSignal == 1)
-        {
-            S1ButtonSignal = 0;
-            menuState = MENUSTATE_SHOWMENUOPERATION;
-        }
-        else if (S2ButtonSignal == 1)
-        {
-            S2ButtonSignal = 0;
-            menuState = MENUSTATE_RESETHIGHSCORE;
-       }
-        break;    
 
     default:
-        menuState = MENUSTATE_SHOWMENUOPERATION;
+        menuState = MENUSTATE_STARTGAME;
         break;
-
     }
 }
-
