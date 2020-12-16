@@ -17,7 +17,7 @@ typedef struct{ //typdef, damit man variablen als Highscoretype benutzen kann
 void displayHighScoreRank( int selectedRank );
 
 void highscoreCheck( unsigned int currentScore); //neue Funktion, um Highscore zu schreiben
-char* pickLeter(void);                          // neue Funktion, um Namen zu wählen
+char* pickLetter(void);                          // neue Funktion, um Namen zu wählen
 void resetHighscore(void);                      //neue Funktion, um Highscore zu reseten
 void readCurrentHighscore (void);              //neue Funktion, um Highscoreliste aus Fram zu lesen
 void writeCurrentHighscore (void);

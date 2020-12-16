@@ -85,7 +85,7 @@ void main(void) {
 
         case GAMESTATE_GAMEOVER:
             clearLCD();
-            sprintf(buf, "SCORE %d, LEVEL %d", currentScore, currentLevel); // MOD
+            sprintf(buf, "SCORE %d LEVEL %d", currentScore, currentLevel); // MOD
             displayScrollText(buf);
             highscoreCheck(currentScore);
             gameState = GAMESTATE_MENUMODE;

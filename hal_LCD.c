@@ -52,7 +52,7 @@ const char alphabetBig[26][2] = { { 0xEF, 0x00 }, /* "A" LCD segments a+b+c+e+f+
                                   { 0x6C, 0x0A }, /* "W" */
                                   { 0x00, 0xAA }, /* "X" */
                                   { 0x00, 0xB0 }, /* "Y" */
-                                  { 0x90, 0x28 } /* "Z" */
+                                  { 0x90, 0x28 }  /* "Z" */
 
 };
 

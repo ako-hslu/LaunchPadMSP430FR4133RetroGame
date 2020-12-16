@@ -42,7 +42,7 @@ void displayHighScoreRank( int selectedRank )
     readCurrentHighscore();
     char buffer[30];
     HighScore highScoreFound = highScore[selectedRank-1];
-    sprintf(buffer, "%d %s %d", highScoreFound.rank, highScoreFound.name, highScoreFound.score);
+    sprintf(buffer, "%d %c%c%c %d", highScoreFound.rank, highScoreFound.name[0], highScoreFound.name[1], highScoreFound.name[2], highScoreFound.score);
     displayScrollText(buffer);
     return;
 }
@@ -54,14 +54,14 @@ void highscoreCheck( unsigned int currentScore){
         int i =0;
         HighScore temp;
         HighScore buffer = {99,"AAA",000};
-        char *pLeter = 0;
+        char *pLetter = 0;
         readCurrentHighscore();
         
         temp.score = currentScore;  //gets Score from game
-        pLeter = pickLeter();       // chooses name for new score
+        pLetter = pickLetter();       // chooses name for new score
         for(i =0; i<3 ; i++){       //writes name in to new score
-            temp.name[i] = *pLeter;
-            pLeter++;
+            temp.name[i] = *pLetter;
+            pLetter++;
         }
         
         
@@ -111,31 +111,31 @@ void highscoreCheck( unsigned int currentScore){
 
 
 
-char* pickLeter (void){                 //lets player choose new Name
-    char leter = 'A';
+char* pickLetter (void){                 //lets player choose new Name
+    char letter = 'A';
     char name[3] = {'A','A','A'};
     char* pName = NULL;
     int counter =0;
     
     while(counter<3){
-        showChar(leter, pos6);
+        showChar(letter, pos6);
         showChar(name[0], pos1);
         showChar(name[1], pos2);
         showChar(name[2], pos3);
         
         if(S1ButtonSignal == 1){
             S1ButtonSignal = 0;
-            if(leter<='Z'){
-                leter++;
+            if(letter<'Z'){
+                letter++;
             }else{
-                leter ='A';
+                letter ='A';
             }
             
         }else if(S2ButtonSignal == 1){
             S2ButtonSignal = 0;
-            name[counter]= leter;
+            name[counter]= letter;
             counter++;
-            leter ='A';
+            letter ='A';
         }
        
     }
