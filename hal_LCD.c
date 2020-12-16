@@ -171,14 +171,6 @@ void displayScrollText(char *msg)
         }
     }
 }
-void showMenu(){
-    char buffer[4] = "MENU";
-    showChar(buffer[0], pos2);
-    showChar(buffer[1], pos3);
-    showChar(buffer[2], pos4);
-    showChar(buffer[3], pos5);
-    __delay_cycles(1000000);
-}
 /*
  * Displays input character at given LCD digit/position
  * Only spaces, numeric digits, and uppercase letters are accepted characters

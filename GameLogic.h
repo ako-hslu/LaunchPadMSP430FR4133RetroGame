@@ -14,12 +14,14 @@ typedef enum  {
     GAMESTATE_MENUMODE,
     GAMESTATE_GAMEINIT,
     GAMESTATE_PLAYMODE,
-    GAMESTATE_GAMEOVER
+    GAMESTATE_GAMEOVER,
+    GAMESTATE_RESETHIGHSCORES
 } GameState;
 
 
 extern GameState gameState;
 extern unsigned int currentScore;
+extern unsigned int currentLevel;
 
 
 void initGameLogic( void );

@@ -52,7 +52,7 @@ void UpdateMenu()
         if(S1ButtonSignal == 1)
         {
             S1ButtonSignal = 0;
-            menuState = MENUSTATE_OPTIONSTARTGAME;
+            menuState = MENUSTATE_OPTIONRESETHIGHSCORE;
         }
         else if (S2ButtonSignal == 1)
         {
@@ -61,6 +61,21 @@ void UpdateMenu()
             menuState = MENUSTATE_SHOWHIGHSCORES;
         }
         break;
+
+    case MENUSTATE_OPTIONRESETHIGHSCORE:
+        displayScrollText("4-RESET HIGHSCORES");
+        if(S1ButtonSignal == 1)
+        {
+            S1ButtonSignal = 0;
+            menuState = MENUSTATE_OPTIONSTARTGAME;
+        }
+        else if( S2ButtonSignal == 1)
+        {
+            S2ButtonSignal = 0;
+            menuState = MENUSTATE_RESETHIGHSCORE;
+        }
+        break;
+
 
     case MENUSTATE_SHOWINSTRUCTIONS:
         displayScrollText("COLLECT THE * AND AVOID THE + - DO THIS BY PRESSING S2");
@@ -95,8 +110,20 @@ void UpdateMenu()
         }
         break;
 
+
+
     default:
         menuState = MENUSTATE_STARTGAME;
         break;
     }
 }
+
+void showMenu(){
+    char buffer[4] = "MENU";
+    showChar(buffer[0], pos2);
+    showChar(buffer[1], pos3);
+    showChar(buffer[2], pos4);
+    showChar(buffer[3], pos5);
+    __delay_cycles(1000000);
+}
+

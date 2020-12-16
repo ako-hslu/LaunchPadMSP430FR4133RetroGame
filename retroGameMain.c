@@ -16,6 +16,7 @@
 #include "UserMenu.h"
 #include "GameLogic.h"
 #include "hal_LCD.h"
+#include "HighScore.h"
 
 
 
@@ -65,6 +66,13 @@ void main(void) {
                 // switch the main state machine to Play Mode
                 gameState = GAMESTATE_GAMEINIT;
             }
+            if(menuState == MENUSTATE_RESETHIGHSCORE)
+            {
+                // reset the menuState
+                menuState = MENUSTATE_OPTIONSTARTGAME;
+                // switch the main state machine to Play Mode
+                gameState = GAMESTATE_RESETHIGHSCORES;
+            }
             break;
         case GAMESTATE_GAMEINIT:
             initGameLogic();
@@ -77,9 +85,15 @@ void main(void) {
 
         case GAMESTATE_GAMEOVER:
             clearLCD();
-            sprintf(buf, "SCORE %d", currentScore);
+            sprintf(buf, "SCORE %d, LEVEL %d", currentScore, currentLevel); // MOD
             displayScrollText(buf);
+            highscoreCheck(currentScore);
             gameState = GAMESTATE_MENUMODE;
+            break;
+
+        case GAMESTATE_RESETHIGHSCORES:
+            resetHighscore();
+            gameState = GAMESTATE_INIT;
             break;
 
         default:

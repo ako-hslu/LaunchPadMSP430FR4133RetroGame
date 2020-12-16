@@ -15,7 +15,9 @@ typedef enum {
     MENUSTATE_INSTRUCTION,
     MENUSTATE_SHOWINSTRUCTIONS,
     MENUSTATE_HIGHSCORE,
-    MENUSTATE_SHOWHIGHSCORES
+    MENUSTATE_SHOWHIGHSCORES,
+    MENUSTATE_OPTIONRESETHIGHSCORE,
+    MENUSTATE_RESETHIGHSCORE
 
 } MenuState;
 
@@ -23,6 +25,7 @@ typedef enum {
 extern MenuState menuState;
 
 void UpdateMenu(void);
+void showMenu(void);
 
 
 #endif /* _USERMENU_H_ */
